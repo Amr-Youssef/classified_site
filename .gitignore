@@ -1,0 +1,40 @@
+# === Secrets - لا تنشر أبداً ===
+.env
+.env.local
+.env.production
+*.key
+*.pem
+
+# === Uploads & user data ===
+/uploads/*
+!/uploads/.gitkeep
+/slider_images/*
+!/slider_images/.gitkeep
+
+# === Storage logs & temp mails ===
+/storage/php-errors.log
+/storage/mails/*
+!/storage/.gitkeep
+
+# === Dependencies ===
+/vendor/
+/PHPMailer/
+composer.phar
+
+# === IDE & OS ===
+.vscode/
+.idea/
+.qodo/
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === DB dumps with real data - راجع قبل النشر ===
+# database.sql مسموح (هيكل) لكن ملفات النسخ احذفها:
+*نسخة.sql
+datacontent.sql
+newentries.sql
+
+# === Test files ===
+test_header*.html

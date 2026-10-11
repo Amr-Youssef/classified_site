@@ -1,0 +1,2005 @@
+/*
+ * Modern styling for the classified site.
+ *
+ * This file defines additional CSS classes that give the existing
+ * application a fresh, contemporary look without touching the
+ * original styles or changing any business logic. The classes here
+ * can be layered on top of the current markup to introduce gradients,
+ * glassmorphism, modern typography and responsive micro‑interactions.
+ */
+
+/* Inherit the base layout and structural rules from the original
+   stylesheet. By importing the old file here we ensure that the grid,
+   forms and other components still behave correctly even though
+   `styles.css` is no longer linked in the HTML. */
+@import url('styles.css');
+
+/* Import web fonts. These fonts may not be available in an offline
+   environment but are included here for completeness. Browsers will
+   gracefully fall back to system defaults if the remote fonts cannot
+   be fetched. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap');
+/* إضافة خط عربي حديث يدعم النصوص العربية بشكل واضح ومستقر */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+
+/* Define reusable CSS variables for colours, gradients and blur.
+   Using variables makes it easy to adjust the theme later or create
+   alternate colour schemes without changing every rule individually. */
+:root,
+:root.theme-dark {
+  /*
+   * The original colour palette used bright purples and oranges. To better
+   * match the provided mock‑ups (dark blues and muted greys), the core
+   * gradients and transparency values are redefined below. These values
+   * set the tone for the entire application: deep navy backgrounds,
+   * soft glassy cards, and gentle blue highlights for interactive
+   * elements. Changing variables in one place allows the look and feel to
+   * be updated across all pages without touching individual rules.
+   */
+  --primary-gradient: linear-gradient(135deg, #0a3e80 0%, #06234e 100%);
+  --secondary-gradient: linear-gradient(135deg, #27385f 0%, #0a193d 100%);
+  /* Cards are now subtly translucent rather than opaque white.
+     Lower alpha values help the underlying radial gradient peek through. */
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.15);
+  --blur-amount: 15px;
+  --dark-bg: #0a2342;
+  --dark-card-bg: rgba(255, 255, 255, 0.08);
+  /* A deeper radial gradient for the body background that fades from
+     midnight blue at the top to almost black at the bottom. */
+  --body-gradient: radial-gradient(circle at 50% 10%, #0a2342 0%, #010d24 100%);
+}
+
+/* Light theme variables */
+:root.theme-light {
+  --primary-gradient: linear-gradient(135deg, #e8f0ff 0%, #cfe0ff 100%);
+  --secondary-gradient: linear-gradient(135deg, #ffffff 0%, #f4f7ff 100%);
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --card-border: rgba(0, 27, 55, 0.12);
+  --blur-amount: 10px;
+  --dark-bg: #ffffff;
+  --dark-card-bg: rgba(255, 255, 255, 0.95);
+  /* Sky-tinted light background (slightly darker) */
+  --body-gradient: radial-gradient(circle at 50% 10%, #eff6ff 0%, #dbeafe 100%);
+}
+
+/* Global responsive media */
+img, video, canvas, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Utility: responsive tables */
+@media (max-width: 768px) {
+  .admin-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+}
+
+/* Chips for suggestions and filters */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+}
+.chip:hover { filter: brightness(1.1); }
+
+/* Pagination styles */
+.pagination { display: flex; flex-wrap: wrap; gap: 6px; }
+.pagination .page-link {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: #fff;
+  text-decoration: none;
+}
+.pagination .page-link.active {
+  background-image: var(--primary-gradient);
+  border-color: transparent;
+}
+.results-meta { color: #fff; font-size: 14px; }
+
+/* Light overrides for chips/pagination/meta */
+:root.theme-light .chip { color: #0b1a2a; }
+:root.theme-light .pagination .page-link { color: #0b1a2a; }
+:root.theme-light .results-meta { color: #274c7c; }
+
+/* ------------------------------------------------------------
+ * عناصر إضافية للمظهر العصري (تعديل الطلب)
+ * قمنا بإضافة طبقات زجاجية إلى رأس وتذييل الموقع وصندوق وصف الإعلان،
+ * بالإضافة إلى تحسين عرض التعليقات.
+ * هذه القواعد تستخدم classes جديدة حتى لا تتعارض مع الأنماط القديمة.
+ */
+
+/* رأس الموقع بنمط زجاجي */
+.header-modern {
+  /* دمج الهيدر مع خلفية الصفحة بدلاً من جعله بطاقة منفصلة */
+  backdrop-filter: none;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  margin-bottom: 20px;
+  padding: 20px 0;
+}
+
+/* Light mode header tweaks */
+:root.theme-light .header-modern {
+  /* Subtle sky tint for header (slightly darker) */
+  background: linear-gradient(0deg, rgba(235,244,255,.96), rgba(235,244,255,.96));
+  border-bottom: 1px solid rgba(54,93,141,.12);
+}
+
+/* تنظيم محتويات رأس الصفحة ليتجاوب بين شاشة صغيرة وكبيرة */
+.header-modern .header-wrapper {
+  display: flex;
+  flex-direction: column;
+  /* Increase spacing between elements in the header */
+  gap: 20px;
+  align-items: center;
+  text-align: center;
+}
+@media (min-width: 768px) {
+  .header-modern .header-wrapper {
+    /* On larger screens distribute items horizontally and allow wrapping
+       so that the nav and search bar can sit neatly alongside the title. */
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    text-align: initial;
+  }
+}
+
+/* تذييل الموقع بنمط زجاجي */
+.footer-modern {
+  backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  /* Increase vertical spacing to give breathing room at the bottom */
+  margin-top: 60px;
+  padding: 30px 20px;
+  color: #fff;
+  text-align: center;
+}
+.footer-modern p {
+  margin: 0;
+  color: #fff;
+}
+
+/* Align and space items inside the footer container */
+.footer-modern .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Light footer overrides */
+:root.theme-light .footer-modern { color: #0b1a2a; background: rgba(235,244,255,0.96); border-color: rgba(54,93,141,0.12); }
+:root.theme-light .footer-modern p { color: #0b1a2a; }
+:root.theme-light .footer-links a { color: #375a8c; }
+:root.theme-light .footer-links a:hover { color: #0b1a2a; }
+:root.theme-light .social-links a { color: #375a8c; border-color: rgba(0,0,0,.08); background: rgba(0,0,0,.03); }
+:root.theme-light .social-links a:hover { color: #0b1a2a; background: rgba(0,0,0,.06); }
+
+/* Enhanced footer grid and links */
+.footer-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  text-align: start;
+}
+.footer-col h4 {
+  margin: 0 0 10px;
+  color: #ffd700;
+  font-size: 16px;
+}
+.footer-brand { font-size: 18px; font-weight: 800; color: #fff; margin: 0 0 6px; }
+.footer-desc { color: #e0e0e0; margin: 0 0 10px; line-height: 1.6; }
+.footer-links { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.footer-links a { color: #cfe0f5; text-decoration: none; }
+.footer-links a:hover { color: #ffffff; text-decoration: underline; }
+.social-links { list-style: none; padding: 0; margin: 8px 0 0; display: flex; gap: 10px; }
+.social-links a { color: #cfe0f5; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; background: rgba(255,255,255,.06); }
+.social-links a:hover { color: #fff; background: rgba(255,255,255,.12); }
+.footer-bottom { width: 100%; margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.15); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.back-to-top { color: #fff; width: 36px; height: 36px; border-radius: 10px; border: 1px solid rgba(255,255,255,.18); display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,.08); text-decoration: none; }
+.back-to-top:hover { background: rgba(255,255,255,.16); }
+
+/* Light footer text/buttons */
+:root.theme-light .footer-brand { color: #0b1a2a; }
+:root.theme-light .back-to-top { color: #0b1a2a; border-color: rgba(0,0,0,.08); background: rgba(0,0,0,.04); }
+:root.theme-light .back-to-top:hover { background: rgba(0,0,0,.08); }
+@media (max-width: 900px) { .footer-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .footer-grid { grid-template-columns: 1fr; } .footer-bottom { justify-content: center; } }
+
+/* صندوق الوصف للإعلان */
+.description-modern {
+  backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+.description-modern p {
+  margin: 0;
+  color: #fff;
+}
+
+/* Light description box text */
+:root.theme-light .description-modern,
+:root.theme-light .description-modern p { color: #0b1a2a; }
+
+/* تحسين عرض قائمة التعليقات */
+.comments-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.comments-list li.comment-item {
+  margin-bottom: 12px;
+  padding: 12px;
+  color: #fff;
+  /* إضافة خلفية داكنة لتعزيز قابلية القراءة وتقليل الإزعاج */
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+}
+
+/* Light comments text */
+:root.theme-light .comments-list li.comment-item { color: #0b1a2a; background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,.08); }
+
+/* تلميحات إضافية للعناصر الداخلية فى التعليقات */
+.comment-item strong {
+  font-weight: 600;
+  color: #ffd700;
+}
+.comment-item .comment-time {
+  font-size: 12px;
+  color: #ccc;
+}
+
+/* رسائل الخطأ والنجاح بتصميم عصري ومتناسق مع الخلفية الداكنة */
+.error {
+  color: #ffb3b3;
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+.success {
+  color: #a5d6a7;
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+/* تنبيه معلوماتي بنغمة زرقاء مناسبة للخلفية الداكنة */
+.info {
+  color: #cfe0ff;
+  background: rgba(33, 150, 243, 0.1);
+  border: 1px solid rgba(33, 150, 243, 0.35);
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* تحسين عناصر صفحة الملف الشخصي داخل البطاقات الحديثة */
+.profile-info.card-modern .profile-meta p,
+.edit-profile.card-modern .profile-meta p,
+.favorites-section.card-modern p,
+.messages-section.card-modern p {
+  color: #fff;
+}
+.profile-info.card-modern .avatar-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+/* تحسين شبكة الإعلانات في الأقسام المفضلة والصفحات الأخرى داخل البطاقات */
+.favorites-section.card-modern .listings-grid,
+.listings-grid.modern-grid,
+.categories-grid.modern-grid {
+  gap: 20px;
+  margin-bottom: 20px;
+}
+/* Ensure grids fit small screens neatly */
+@media (max-width: 576px) {
+  .listings-grid,
+  .listings-grid.modern-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+  }
+  .categories-grid,
+  .categories-grid.modern-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+  }
+}
+
+/* ضبط عناصر قائمة الرسائل داخل قسم الرسائل في صفحة الملف الشخصي */
+.messages-section.card-modern .messages-list li {
+  border: none;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 12px;
+}
+
+/* تحسين مظهر العناوين لتتناسب مع النمط الداكن */
+h2, h3, h4 {
+  color: #ffffff;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+h2 {
+  font-size: 1.8em;
+}
+h3 {
+  font-size: 1.4em;
+}
+
+/* تنسيق حقل رفع الملفات داخل النماذج الحديثة */
+.form-modern input[type="file"],
+.input-modern[type="file"] {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+.form-modern input[type="file"]::file-selector-button,
+.input-modern[type="file"]::file-selector-button {
+  background: var(--primary-gradient);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 8px;
+}
+.form-modern input[type="file"]::-webkit-file-upload-button,
+.input-modern[type="file"]::-webkit-file-upload-button {
+  background: var(--primary-gradient);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 8px;
+}
+.form-modern input[type="file"]::file-selector-button:hover,
+.input-modern[type="file"]::file-selector-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.form-modern input[type="file"]::-webkit-file-upload-button:hover,
+.input-modern[type="file"]::-webkit-file-upload-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Light mode: make file inputs and their buttons highly legible */
+:root.theme-light .form-modern input[type="file"],
+:root.theme-light .input-modern[type="file"] {
+  background: rgba(255,255,255,.98);
+  border-color: rgba(0,0,0,.1);
+  color: #0b1a2a;
+}
+:root.theme-light .form-modern input[type="file"]::file-selector-button,
+:root.theme-light .input-modern[type="file"]::file-selector-button,
+:root.theme-light .form-modern input[type="file"]::-webkit-file-upload-button,
+:root.theme-light .input-modern[type="file"]::-webkit-file-upload-button {
+  background-image: linear-gradient(135deg, #2a62ad 0%, #184f99 100%);
+  color: #ffffff;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+:root.theme-light .form-modern input[type="file"]:focus,
+:root.theme-light .input-modern[type="file"]:focus {
+  outline: 2px solid rgba(14,107,216,.35);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(14,107,216,.12);
+}
+
+/* Apply modern typography when opt‑in class is present on the body.
+   This rule leaves the global typography untouched unless the page
+   explicitly adds `modern-body` to the `<body>` element. */
+body.modern-body {
+  /* استخدم خط "Cairo" للنصوص العربية وخط "Inter" و"Poppins" للنصوص اللاتينية لإضفاء مظهر عصري ومتناسق */
+  font-family: 'Cairo', 'Inter', 'Poppins', sans-serif;
+  line-height: 1.6;
+  color: #f0f0f0;
+  /* استخدم التدرج الجديد بدلاً من اللون الداكن الثابت */
+  background: var(--body-gradient);
+  /* منع أي تمرير أفقى غير مقصود على الجوال */
+  overflow-x: hidden;
+}
+
+/* Light body background uses light gradient */
+:root.theme-light body.modern-body { background: var(--body-gradient); color: #0b1a2a; }
+
+/* Cards and text colors in light mode */
+:root.theme-light .card-modern,
+:root.theme-light .form-modern,
+:root.theme-light .listing-card.card-modern,
+:root.theme-light .auth-card.card-modern {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+  color: #0b1a2a;
+}
+:root.theme-light .listing-card.card-modern .listing-title,
+:root.theme-light .listing-card.card-modern .listing-title a { color: #0b1a2a !important; text-shadow: none; }
+:root.theme-light .listing-card.card-modern .listing-price { color: #0a4fad !important; }
+:root.theme-light .listing-card.card-modern .listing-category { color: #3b5b85 !important; }
+
+/* Inputs inside forms */
+:root.theme-light .form-modern input,
+:root.theme-light .form-modern textarea,
+:root.theme-light .form-modern select {
+  background: rgba(255,255,255,.98);
+  border-color: rgba(0,0,0,.1);
+  color: #0b1a2a;
+}
+
+/* Chips, pagination, icon cards */
+:root.theme-light .chip,
+:root.theme-light .pagination .page-link,
+:root.theme-light .hero-icon-card,
+:root.theme-light .description-modern {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+  color: #0b1a2a;
+}
+:root.theme-light .hero-icon-card { color: #0b1a2a; }
+
+/* Hero title & nav links */
+:root.theme-light .hero-title-neo { color: #0b1a2a; text-shadow: none; }
+:root.theme-light .nav-neo a { color: #375a8c; }
+:root.theme-light .nav-neo a:hover { color: #0b1a2a; }
+
+/* Search input in hero */
+:root.theme-light .hero-search-neo input[type="text"] {
+  background: rgba(255,255,255,.98);
+  border-color: rgba(0,0,0,.1);
+  color: #0b1a2a;
+}
+:root.theme-light .hero-search-neo input::placeholder { color: rgba(11,26,42,.55); }
+:root.theme-light .hero-search-btn,
+:root.theme-light .hero-plus-btn { border-color: rgba(0,0,0,.08); }
+
+/* Auth blocks */
+:root.theme-light .auth-card.card-modern,
+:root.theme-light .auth-card.card-modern p,
+:root.theme-light .auth-card.card-modern label,
+:root.theme-light .auth-card.card-modern small,
+:root.theme-light .auth-card.card-modern .form-hint { color: #0b1a2a; }
+:root.theme-light .auth-card.card-modern a { color: #0a4fad; }
+:root.theme-light .auth-note { color: #274c7c; }
+
+/* Bottom nav in light */
+:root.theme-light .bottom-nav-neo { background: rgba(255,255,255,.9); border-top:1px solid rgba(0,0,0,.08); }
+:root.theme-light .bottom-nav-neo a { color: #3a5f90; }
+:root.theme-light .bottom-nav-neo a:hover { color: #0b1a2a; }
+
+/* Alert banner light */
+:root.theme-light .alert-modern-warning { background:#fffbe6; color:#8a5200; border-bottom:1px solid #ffe58f; }
+
+/* Navbar styling with glass effect and subtle animations. When
+   `navbar-modern` is added alongside existing classes on a `<nav>`
+   element, the navigation bar becomes semi‑transparent and blurred. */
+.navbar-modern {
+  backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+  /* تقليل كثافة لون الخلفية حتى يندمج شريط التنقل أكثر مع الخلفية العامة */
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  margin-top: 10px;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar-modern ul {
+  display: flex;
+  /* السماح بتوزيع العناصر على عدة أسطر إذا ضاق شريط التنقل */
+  flex-wrap: wrap;
+  /* تقليل الفاصل بين عناصر التنقل للحصول على عرض أكثر إحكاماً */
+  gap: 8px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navbar-modern a {
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  position: relative;
+  font-weight: 600;
+}
+
+/* Underline effect on hover using a gradient bar */
+.navbar-modern a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 2px;
+  background: var(--primary-gradient);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.navbar-modern a:hover::after {
+  opacity: 1;
+}
+.navbar-modern a:hover {
+  color: #ffffff;
+}
+
+/* عند استخدام شريط التنقل داخل رأس الموقع، قم بإزالة الهامش العلوي حتى يتماشى مع شريط البحث */
+.header-modern .navbar-modern {
+  margin-top: 0;
+}
+
+/* Modern button with gradient, rounded corners and hover glow */
+.btn-modern {
+  display: inline-block;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  background-image: var(--primary-gradient);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.btn-modern:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+.btn-modern:active {
+  transform: scale(0.97);
+}
+
+/* Generic modern card used for listings, categories or any content block.
+   This class introduces a semi‑transparent background with blur to
+   achieve a glassy appearance. */
+.card-modern {
+  backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-modern:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Specialisation for listing cards: adjustments to inner elements */
+.card-modern .listing-image {
+  border-radius: 16px 16px 0 0;
+  height: 200px;
+  object-fit: cover;
+}
+.listing-card.card-modern.is-featured { border-color: rgba(255,215,0,0.55); box-shadow: 0 0 0 1px rgba(255,215,0,0.35), 0 10px 26px rgba(0,0,0,0.25); }
+.listing-card .badge-featured { display:inline-block; position:absolute; top:10px; right:10px; padding:4px 10px; border-radius:999px; background: linear-gradient(135deg,#f7b733,#fc4a1a); color:#fff; font-size:12px; font-weight:700; z-index:2; }
+.card-modern .ad-info {
+  padding: 16px;
+  color: #fff;
+}
+/* Stronger contrast for listing text on dark/glass cards */
+.card-modern .listing-title {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: #ffffff !important;
+  font-weight: 700;
+  line-height: 1.3;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+}
+.card-modern .listing-title a {
+  color: inherit;
+  text-decoration: none;
+}
+.card-modern .listing-title a:hover {
+  text-decoration: underline;
+}
+.card-modern .listing-price {
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffda3a; /* higher contrast gold */
+  text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+}
+.card-modern .listing-category {
+  font-size: 14px;
+  color: #e6f1ff; /* brighter secondary text for readability on deep blue */
+}
+
+/* Light overrides for listing texts */
+:root.theme-light .card-modern .listing-title,
+:root.theme-light .listing-card.card-modern .listing-title,
+:root.theme-light .listing-card.card-modern .listing-title a { color: #0b1a2a !important; text-shadow: none; }
+:root.theme-light .card-modern .listing-price,
+:root.theme-light .listing-card.card-modern .listing-price { color: #0a4fad !important; text-shadow: none; }
+:root.theme-light .card-modern .listing-category,
+:root.theme-light .listing-card.card-modern .listing-category { color: #3b5b85 !important; }
+
+/* Ensure light text specifically when a listing is inside a modern card */
+.listing-card.card-modern .listing-title,
+.listing-card.card-modern .listing-title a { color: #ffffff !important; font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+.listing-card.card-modern .listing-price { color: #ffda3a !important; font-weight: 800; }
+.listing-card.card-modern .listing-category { color: #e6f1ff !important; }
+
+/* دعم كتل المعلومات للإعلانات في صفحات أخرى */
+.card-modern .listing-info {
+  padding: 16px;
+  color: #fff;
+}
+/* Light text inside listing-info */
+:root.theme-light .card-modern .listing-info,
+:root.theme-light .listing-card.card-modern .listing-info { color: #0b1a2a !important; }
+/* Ensure container text defaults to light inside dark cards */
+.listing-card.card-modern .ad-info,
+.listing-card.card-modern .listing-info { color: #ffffff !important; }
+.listing-card.card-modern .listing-title a:visited { color: #ffffff !important; }
+/* Light visited link color within listing card */
+:root.theme-light .listing-card.card-modern .listing-title a:visited { color: #0b1a2a !important; }
+/* Lighten text inside .listing-info variant as well */
+.listing-card.card-modern .listing-info .listing-title,
+.listing-card.card-modern .listing-info .listing-title a { color: #ffffff !important; font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+.listing-card.card-modern .listing-info .listing-price { color: #ffda3a !important; font-weight: 800; }
+.listing-card.card-modern .listing-info .listing-category { color: #e6f1ff !important; }
+
+/* Modern category cards with glass effect and gradient overlay */
+.category-card.card-modern {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 16px;
+  text-align: center;
+  background: var(--primary-gradient); /* تدرج موحد متناسق مع التصميم */
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.category-card.card-modern .category-name { color: #ffffff; }
+.category-card.card-modern .category-count { color: #e0e0e0; }
+
+/* Light overrides for category cards */
+:root.theme-light .category-card.card-modern { color: #0b1a2a; }
+:root.theme-light .category-card.card-modern .category-name { color: #0b1a2a; }
+:root.theme-light .category-card.card-modern .category-count { color: #3b5b85; }
+.category-card.card-modern:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* Adjust icon and text inside category cards */
+.category-card.card-modern .category-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
+  color: #ffd700;
+}
+.category-card.card-modern .category-name {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #ffffff;
+}
+.category-card.card-modern .category-count {
+  font-size: 14px;
+  color: #e0e0e0;
+}
+
+/* تلوين عداد الإعلانات في الأقسام */
+.card-modern .category-count {
+  font-size: 14px;
+  color: #ddd;
+}
+
+/* Modern form container with glass effect */
+.form-modern {
+  backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 20px;
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  /* منع تمدد النماذج أفقياً بشكل مبالغ فيه خاصة على الشاشات الكبيرة */
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* Avoid stacking glass when a form lives inside a glass card */
+.card-modern .form-modern {
+  backdrop-filter: none;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  max-width: 100%;
+}
+.form-modern .form-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.form-modern label {
+  margin-bottom: 4px;
+  font-weight: 600;
+  /* اجعل عناوين الحقول أفتح لتناسب الخلفية الداكنة */
+  color: #eaf2ff;
+}
+/* Auth card container */
+.auth-card.card-modern { max-width: 720px; margin: 0 auto 24px; padding: 24px; }
+.auth-card h2 { margin-top: 0; text-align: center; }
+.auth-note { text-align: center; margin-top: 10px; }
+
+/* نصوص صفحات الدخول/التسجيل لتكون أوضح في النمط الداكن */
+.auth-card.card-modern,
+.auth-card.card-modern p,
+.auth-card.card-modern label,
+.auth-card.card-modern small,
+.auth-card.card-modern .form-hint {
+  color: #eaf2ff;
+}
+.auth-card.card-modern a { color: #cfe0ff; }
+.auth-card.card-modern a:hover { color: #ffffff; }
+.auth-note { color: #dbe7ff; }
+.auth-note a { color: #cfe0ff; }
+.auth-note a:hover { color: #ffffff; }
+
+/* Two-column responsive rows inside auth forms */
+.auth-form.form-modern .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.auth-form.form-modern .form-group { display: flex; flex-direction: column; }
+@media (max-width: 640px) {
+  .auth-form.form-modern .form-row { grid-template-columns: 1fr; }
+}
+
+/* Input with action button (e.g., show/hide password) */
+.input-with-action { position: relative; display: flex; align-items: center; }
+.input-with-action input { padding-inline-end: 42px; }
+.input-with-action .toggle-visibility {
+  position: absolute;
+  inset-inline-start: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 1px solid var(--card-border);
+  background: rgba(255,255,255,0.08);
+  color: #eaf2ff;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Avatar preview box */
+.avatar-preview { margin-top: 8px; width: 96px; height: 96px; border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border); background: rgba(255,255,255,0.06); display: none; }
+.avatar-preview[aria-hidden="false"] { display: block; }
+.avatar-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Modern input fields: translucent with soft borders */
+.input-modern {
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.input-modern::placeholder {
+  color: #d3ddf5;
+}
+.input-modern:focus {
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+/* Adjust error messages for dark or glass backgrounds inside modern forms */
+.form-modern .error {
+  color: #ffb3b3;
+  background-color: rgba(255, 0, 0, 0.1);
+  border-color: rgba(255, 0, 0, 0.3);
+}
+
+/* Modern search bar with glass effect and gradient button */
+.search-bar-modern {
+  width: 100%;
+  max-width: 600px;
+  margin: 15px auto;
+}
+
+.search-bar-modern form {
+  display: flex;
+  align-items: center;
+  background: var(--card-bg);
+  backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+  border: 1px solid var(--card-border);
+  border-radius: 40px;
+  overflow: hidden;
+  padding: 4px 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.search-bar-modern input[type="text"] {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-bar-modern button {
+  margin-left: 4px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 32px;
+  background-image: var(--secondary-gradient);
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.search-bar-modern button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Placeholder color for search bar input */
+.search-bar-modern input[type="text"]::placeholder {
+  color: #cccccc;
+}
+
+/* ------------------------------------------------------------------
+ * Header search form with integrated icon
+ *
+ * The header uses a dedicated form class (`header-search-form`) so that
+ * the magnifying glass can sit inside the input instead of being a
+ * separate button. In RTL layouts the icon is anchored to the right
+ * edge of the input and the button is hidden entirely. Additional
+ * padding on the input ensures text does not overlap the icon.
+ */
+.header-search-form {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.header-search-form .search-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #cccccc;
+  pointer-events: none;
+  /* Use flexbox so the SVG icon is centered within the span */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.header-search-form .search-icon svg {
+  width: 20px;
+  height: 20px;
+}
+.header-search-form input[type="text"] {
+  /* Ensure space for the icon on the right side in RTL layouts */
+  padding-right: 40px;
+  padding-left: 20px;
+}
+.header-search-form button {
+  /* Hide the native submit button; the search is triggered via Enter */
+  display: none;
+}
+
+/* Responsiveness tweaks for smaller screens */
+@media (max-width: 768px) {
+  .navbar-modern {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .btn-modern {
+    width: 100%;
+    text-align: center;
+  }
+  .card-modern {
+    margin-bottom: 20px;
+  }
+  /* Allow navigation items to wrap and centre them on medium screens */
+  .navbar-modern ul {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  /* Mobile: turn nav links into clear, tappable buttons */
+  .navbar-modern a {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 12px 14px;
+    min-height: 44px; /* touch target */
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+  }
+}
+
+/* Extra responsive tweaks for small screens (phones) */
+@media (max-width: 576px) {
+  /* Reduce padding and increase spacing in the header on small devices */
+  .header-modern {
+    padding: 16px;
+  }
+  .header-modern .header-wrapper {
+    gap: 16px;
+  }
+  .site-title a {
+    font-size: 28px;
+  }
+  .search-bar-modern {
+    max-width: 100%;
+    margin: 10px auto;
+  }
+  .search-bar-modern form {
+    padding: 4px 10px;
+    border-radius: 32px;
+  }
+  .search-bar-modern input[type="text"] {
+    font-size: 14px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .navbar-modern a {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+  .btn-modern {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+  .results-meta { font-size: 13px; }
+  .card-modern {
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .category-card.card-modern {
+    padding: 20px 12px;
+  }
+}
+
+/* Ultra-small phones: enforce single-column grids and adjust typography */
+@media (max-width: 420px) {
+  .listings-grid,
+  .listings-grid.modern-grid,
+  .categories-grid,
+  .categories-grid.modern-grid {
+    grid-template-columns: 1fr !important;
+  }
+  h2 { font-size: 1.3em; }
+  h3 { font-size: 1.1em; }
+  .homepage-slider .slide img { height: 200px; }
+  .listing-card .listing-image { height: 160px; }
+}
+
+/* تنسيق حاوية التنقل والبحث لعرضهما في صف واحد مع فاصل متناسق */
+.nav-search {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  /* جعل عناصر شريط التنقل والبحث تصطف فى صف واحد بدلاً من الانتقال لسطر جديد عند توفر مساحة كافية */
+  flex-wrap: nowrap;
+  /* ترتيب العناصر من اليمين لليسار: اسم الموقع، شريط التنقل، شريط البحث، زر القائمة */
+  justify-content: flex-start;
+}
+.nav-search .navbar-modern {
+  /* تحديد عرض شريط التنقل بشكل أكبر لاستيعاب عناصر القائمة في صف واحد عند العرض الكامل */
+  flex: 0 1 750px;
+  max-width: 750px;
+  /* إزالة الهوامش الرأسية لضمان محاذاة أفضل مع شريط البحث */
+  margin-top: 0;
+}
+.nav-search .search-bar-modern {
+  /* ثبّت عرض شريط البحث بحيث لا يلتهم مساحة شريط التنقل */
+  flex: 0 0 260px;
+  margin: 0;
+  max-width: 260px;
+}
+.nav-search .search-bar-modern form {
+  width: 100%;
+}
+
+/* ضبط اسم الموقع ليأخذ فقط المساحة اللازمة دون تمدد */
+.nav-search .site-title {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+/* تم إزالة زر القائمة المنسدلة (nav-toggle)، لذلك لا توجد أنماط خاصة به */
+
+/* فى الشاشات الصغيرة، تتكدس عناصر الهيدر رأسياً مع احتلال كامل العرض */
+@media (max-width: 768px) {
+  .nav-search {
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+  }
+  /* اجعل كل عنصر يحتل عرضاً كاملاً للمحاذاة الرأسية */
+  .nav-search .site-title,
+  .nav-search .search-bar-modern,
+  .nav-search .navbar-modern {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+  /* توسيط عنوان الموقع فى الشاشات الصغيرة */
+  .nav-search .site-title {
+    text-align: center;
+  }
+  /* السماح للقائمة بالالتفاف بحيث يتم عرضها بشكل عمودى أو متعدد الأسطر بشكل أنيق */
+  .nav-search .navbar-modern ul {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* Light mode: stronger mobile nav background and link contrast */
+@media (max-width: 768px) {
+  :root.theme-light .navbar-modern {
+    background: rgba(255,255,255,0.9);
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  :root.theme-light .navbar-modern a {
+    background: rgba(0,0,0,0.04);
+    border-color: rgba(0,0,0,0.08);
+    color: #0b1a2a;
+  }
+  :root.theme-light .navbar-modern a:hover {
+    background: rgba(0,0,0,0.06);
+  }
+}
+
+/* Header auth buttons: ensure visible in light theme (override inline header styles) */
+:root.theme-light .auth-actions a { background: rgba(0,0,0,0.04) !important; border-color: rgba(0,0,0,0.08) !important; color: #0b1a2a !important; }
+:root.theme-light .auth-actions a.primary { background: linear-gradient(135deg, #2a62ad, #184f99) !important; color: #ffffff !important; border-color: rgba(0,0,0,0.08) !important; }
+
+/* Desktop nav: style auth-only links as pill buttons */
+:root.theme-light .nav-neo li.auth-only a { background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.08); border-radius: 999px; padding: 8px 12px; }
+:root.theme-light .nav-neo li.auth-only a[href*="register.php"] { background-image: linear-gradient(135deg, #2a62ad 0%, #184f99 100%); color: #ffffff; border-color: transparent; }
+
+/* تحسين مظهر عناصر القوائم المنسدلة لتكون النصوص واضحة ومقروءة */
+select {
+  background: var(--card-bg);
+  color: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  appearance: none;
+}
+select option {
+  background: #1b263b;
+  color: #ffffff;
+}
+
+/* --------------------------------------------------
+ * Hero section styles inspired by the provided design
+ * This section sits at the top of the homepage with a prominent title,
+ * a large search bar, and a row of category icons.
+ */
+.hero-section {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+.hero-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  margin: 0;
+}
+/* Ensure the search bar spans the full available width in the hero */
+.hero-section .search-bar-modern {
+  width: 100%;
+  max-width: 600px;
+}
+.hero-section .search-bar-modern form {
+  border-radius: 50px;
+  padding: 6px 10px;
+}
+.hero-section .search-bar-modern input[type="text"] {
+  font-size: 18px;
+  padding: 16px 24px;
+}
+.hero-section .search-bar-modern button {
+  font-size: 24px;
+  padding: 14px 26px;
+  border-radius: 50px;
+}
+
+.hero-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+.hero-icon-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  height: 90px;
+  border-radius: 20px;
+  backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  color: #fff;
+}
+.hero-icon-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+.hero-icon-card .icon {
+  font-size: 32px;
+  margin-bottom: 6px;
+}
+.hero-icon-card .icon-name {
+  font-size: 14px;
+  color: #ffffff;
+  text-align: center;
+}
+
+/* Light hero icon text */
+:root.theme-light .hero-icon-card { color: #0b1a2a; }
+:root.theme-light .hero-icon-card .icon-name { color: #0b1a2a; }
+
+/* Optional dark mode helper class. When a parent has the `dark-mode`
+   class, cards and forms automatically adjust their backgrounds and
+   border colours to be more subtle. */
+.dark-mode {
+  background-color: var(--dark-bg);
+  color: #f0f0f0;
+}
+.dark-mode .card-modern {
+  background: var(--dark-card-bg);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.dark-mode .form-modern {
+  background: var(--dark-card-bg);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* --------------------------------------------------
+ * Slider styles for the homepage.
+ * This slider adopts the glassmorphic aesthetic used throughout
+ * the site and is responsive across devices. Each slide hosts
+ * an image, title and description with a dark overlay for
+ * readability. Dots allow users to jump between slides.
+ */
+.homepage-slider {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 40px;
+  overflow: hidden;
+  border-radius: 24px;
+  /* إزالة تأثير الزجاج والحدود داخل السلايدر لمنع أي تمدد غير مرغوب */
+  backdrop-filter: none;
+  background: transparent;
+  border: none;
+}
+
+.homepage-slider .slide {
+  position: relative;
+  width: 100%;
+  display: none;
+}
+
+.homepage-slider .slide img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 24px;
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .homepage-slider .slide img {
+    height: 350px;
+  }
+}
+
+/* Mobile-safe slider constraints */
+@media (max-width: 576px) {
+  .homepage-slider {
+    max-width: 100%;
+    margin: 0 0 24px;
+  border-radius: 16px;
+  }
+  .homepage-slider .slide img {
+    height: 190px;
+  border-radius: 16px;
+  }
+}
+
+/* Slider: aspect-ratio to prevent overflow and ensure responsive height */
+.homepage-slider .slide .slide-link {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  aspect-ratio: 16 / 9;
+}
+.homepage-slider .slide img {
+  width: 100%;
+  height: 100% !important;
+  object-fit: cover;
+}
+.homepage-slider .slide-caption h3 { font-size: 1.4rem; }
+@media (max-width: 576px) {
+  .homepage-slider .slide .slide-link { border-radius: 16px; aspect-ratio: 4 / 3; }
+  .homepage-slider .slide-caption h3 { font-size: 1.1rem; }
+  .homepage-slider .slide-caption p { font-size: .9rem; }
+}
+
+.homepage-slider .slide-caption {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 12px;
+  z-index: 5;
+}
+
+.homepage-slider .slide-caption h3 {
+  margin: 0 0 4px;
+  font-size: 1.4rem;
+}
+
+.homepage-slider .slide-caption p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.homepage-slider .slider-dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.homepage-slider .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.homepage-slider .dot.active,
+.homepage-slider .dot:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+.dark-mode .input-modern {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* --------------------------------------------------
+ * Light mode readability hardening (global sweep)
+ * Ensure any components that default to white text in dark/glass
+ * properly switch to dark text in :root.theme-light.
+ */
+
+/* Navigation links */
+:root.theme-light .navbar-modern a { color: #0b1a2a; }
+:root.theme-light .navbar-modern a:hover { color: #0a4fad; }
+
+/* Site title */
+:root.theme-light .site-title a { color: #0a4fad; }
+:root.theme-light .site-title a:hover { color: #083a7a; }
+
+/* Search bar input */
+:root.theme-light .search-bar-modern input[type="text"] { color: #0b1a2a; }
+:root.theme-light .search-bar-modern input[type="text"]::placeholder { color: rgba(11,26,42,.55); }
+
+/* Selects */
+:root.theme-light select { background: rgba(255,255,255,.98); border-color: rgba(0,0,0,.1); color: #0b1a2a; }
+:root.theme-light select option { background: #ffffff; color: #0b1a2a; }
+
+/* Hero title */
+:root.theme-light .hero-title { color: #0b1a2a; text-shadow: none; }
+
+/* Breadcrumbs */
+:root.theme-light .breadcrumbs a { color: #375a8c; }
+:root.theme-light .breadcrumbs a:hover { color: #0b1a2a; }
+
+/* Generic modern card text default */
+:root.theme-light .card-modern { color: #0b1a2a; }
+
+/* Messages / Conversations / Notifications in modern skin */
+:root.theme-light .messages-list li.card-modern,
+:root.theme-light .conversations-list li.card-modern,
+:root.theme-light .notifications-list li.card-modern,
+:root.theme-light .notifications-list li { color: #0b1a2a; }
+:root.theme-light .conversations-list .conversation-item { color: #0b1a2a; }
+:root.theme-light .conversations-list .conv-content .conv-name { color: #0b1a2a; }
+:root.theme-light .conversations-list .conv-content .last-message { color: #395a86; }
+:root.theme-light .conversations-list .conv-meta { color: #4b6b94; }
+
+/* Admin blocks styled with modern skin */
+:root.theme-light .admin-section { color: #0b1a2a; }
+:root.theme-light .admin-table { color: #0b1a2a; }
+:root.theme-light .dash-card { color: #0b1a2a; }
+:root.theme-light .dash-card p { color: #0b1a2a; }
+:root.theme-light .admin-table th { background: #f8fafc; color: #0b1a2a; border-color: rgba(0,0,0,0.08); }
+:root.theme-light .admin-table td { background: rgba(0,0,0,0.02); color: #0b1a2a; border-color: rgba(0,0,0,0.08); }
+
+/* Auth pages: override inline light-blue text used for dark mode */
+:root.theme-light .auth-card.card-modern,
+:root.theme-light .auth-card.card-modern p,
+:root.theme-light .auth-card.card-modern label,
+:root.theme-light .auth-card.card-modern small,
+:root.theme-light .auth-card.card-modern .form-hint,
+:root.theme-light .auth-card.card-modern span { color: #0b1a2a !important; }
+:root.theme-light .auth-card.card-modern a { color: #0a4fad !important; }
+:root.theme-light #togglePass { color: #0b1a2a !important; }
+
+/* Admin inline .cat-toggle button (defined inside admin.php) */
+:root.theme-light .cat-toggle { color: #0b1a2a !important; background: rgba(0,0,0,0.03) !important; border-color: rgba(0,0,0,0.08) !important; }
+
+/* Generic timestamps in light */
+:root.theme-light .timestamp { color: #4b6b94; }
+
+/* Buttons in light search bar */
+:root.theme-light .search-bar-modern button { color: #0b1a2a; }
+
+/* Headings in light mode (for sections like "استكشف الأقسام" و"إعلانات مميزة") */
+:root.theme-light h1,
+:root.theme-light h2,
+:root.theme-light h3,
+:root.theme-light h4,
+:root.theme-light h5,
+:root.theme-light h6 { color: #0b1a2a; }
+
+/* Ensure text inside modern cards appears dark in light mode */
+:root.theme-light .card-modern h1,
+:root.theme-light .card-modern h2,
+:root.theme-light .card-modern h3,
+:root.theme-light .card-modern h4,
+:root.theme-light .card-modern p,
+:root.theme-light .card-modern small { color: #0b1a2a; }
+
+/* Slider captions in light mode */
+:root.theme-light .homepage-slider .slide-caption { background: rgba(255,255,255,0.85); color: #0b1a2a; }
+:root.theme-light .homepage-slider .slide-caption h3 { color: #0b1a2a; }
+:root.theme-light .homepage-slider .slide-caption p { color: #274c7c; }
+
+/* Standalone input-modern (outside .form-modern), e.g., "ابحث عن مدينة..." */
+:root.theme-light .input-modern { background: rgba(255,255,255,.98); border-color: rgba(0,0,0,.1); color: #0b1a2a; }
+:root.theme-light .input-modern::placeholder { color: rgba(11,26,42,.55); }
+/* Admin/add forms labels in light mode */
+:root.theme-light .form-modern label { color: #0b1a2a; }
+/* Optional: make summary toggles visible */
+:root.theme-light details summary { color: #0a4fad; }
+
+/* Buttons in light theme: ensure sufficient contrast */
+:root.theme-light .btn-modern {
+  background-image: linear-gradient(135deg, #2a62ad 0%, #184f99 100%);
+  color: #ffffff;
+}
+:root.theme-light .btn-modern:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Legacy .btn overrides for consistency */
+:root.theme-light .btn { background-color: #1666cc; color: #ffffff; }
+
+/* Pagination and comment pager buttons */
+:root.theme-light .pagination .page-link.active {
+  background-image: linear-gradient(135deg, #2a62ad 0%, #184f99 100%);
+  color: #ffffff;
+  border-color: transparent;
+}
+:root.theme-light .comments-pager a {
+  background-image: linear-gradient(135deg, #2a62ad 0%, #184f99 100%);
+  color: #ffffff;
+}
+
+/* Links inside modern cards */
+:root.theme-light .card-modern a { color: #0a4fad; }
+:root.theme-light .card-modern a:hover { color: #083a7a; }
+
+/* Light mode: ensure key CTA texts stay white even inside .card-modern */
+:root.theme-light .ad-contact .btn.btn-modern { color: #ffffff !important; }
+:root.theme-light .ad-contact .btn.btn-modern:hover { filter: brightness(0.95); }
+
+/* Comments pager 'التالي/السابق' inside details card: keep text white */
+:root.theme-light .comments-section.card-modern .comments-pager a {
+  color: #ffffff !important;
+  background-image: linear-gradient(135deg, #2a62ad 0%, #184f99 100%);
+  border-color: transparent;
+}
+
+/* Ad actions buttons (ensure contrast if styled by legacy) */
+:root.theme-light .ad-actions .btn { background-color: #e0521e; color: #ffffff; }
+
+/* Ad details: Contact seller button */
+.ad-actions .btn,
+.ad-actions .btn-modern { min-width: 140px; font-weight: 700; }
+:root.theme-light .ad-actions .btn-modern { background-color: #e0521e; color:#ffffff; border: 1px solid rgba(0,0,0,0.08); }
+:root.theme-light .ad-actions .btn:hover,
+:root.theme-light .ad-actions .btn-modern:hover { filter: brightness(0.95); }
+
+/* Profile: Verify via Nafath button emphasis */
+:root.theme-light a.btn-modern[href*="verify_nafath.php"],
+:root.theme-light .btn-modern.btn-compact[href*="verify_nafath.php"] {
+  background-image: linear-gradient(135deg, #2a62ad 0%, #184f99 100%);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+/* Focus visibility in light */
+:root.theme-light .btn-modern:focus,
+:root.theme-light .btn:focus {
+  outline: 2px solid rgba(14,107,216,.7);
+  outline-offset: 2px;
+}
+
+
+/*
+ * المحادثات والرسائل:
+ * لجعل فقاعات الرسائل تناسب التصميم الزجاجي وتبدو أكثر تناسقاً مع بقية الواجهة.
+ */
+.message-bubble {
+  backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  border-radius: 12px;
+  color: #fff;
+}
+.message-row.mine .message-bubble {
+  background: var(--primary-gradient);
+  color: #fff;
+}
+.message-row.theirs .message-bubble {
+  background: var(--secondary-gradient);
+  color: #fff;
+}
+
+/* محادثة واتساب: تنسيق ترتيب وعرض الرسائل */
+.conversation-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.message-row {
+  display: flex;
+  width: 100%;
+}
+.message-row.mine {
+  justify-content: flex-end;
+}
+.message-row.theirs {
+  justify-content: flex-start;
+}
+.message-bubble {
+  padding: 12px 16px;
+  max-width: 70%;
+  word-wrap: break-word;
+  line-height: 1.4;
+  position: relative;
+}
+.message-bubble .timestamp {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* محادثة واتساب: قائمة المحادثات (conversations-list) */
+.conversations-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.conversations-list .conversation-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  transition: background-color 0.3s ease;
+/* Light overrides for generic ad-info */
+:root.theme-light .card-modern .ad-info { color: #0b1a2a; }
+}
+.conversations-list .conversation-item a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+.conversations-list .conversation-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.conversation-item .conv-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.conversation-item .conv-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.conversation-item .conv-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.conversation-item .conv-content .conv-name {
+  font-weight: 600;
+  margin: 0;
+  color: #fff;
+}
+.conversation-item .conv-content .last-message {
+  margin: 2px 0 0;
+  font-size: 14px;
+  color: #ccc;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.conversation-item .conv-meta {
+  flex-shrink: 0;
+  font-size: 12px;
+  color: #bbb;
+  /* ادفع الطابع الزمني إلى أقصى اليمين داخل صف المحادثة */
+  margin-left: auto;
+  text-align: right;
+}
+
+/*
+ * تخصيص للعناصر القائمة التي أضيف إليها class "card-modern" ضمن الرسائل أو المحادثات أو الإشعارات.
+ */
+.messages-list li.card-modern,
+.conversations-list li.card-modern,
+.notifications-list li.card-modern {
+  backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+/*
+ * أنماط إضافية لتطبيق اللمسات الحديثة على جميع العناصر المتبقية في الموقع.
+ * يتم هنا تخصيص مسار التنقل (breadcrumbs)، نظام الترقيم، إشعارات المستخدم،
+ * أقسام الإدارة والجداول، بطاقات الإحصائيات، الأيقونات والعناوين.
+ */
+
+/* مسار التنقل (breadcrumbs) */
+.breadcrumbs {
+  margin-bottom: 12px;
+}
+.breadcrumbs a {
+  color: #ffffff;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.breadcrumbs a:hover {
+  text-decoration: underline;
+}
+.breadcrumbs .crumb-icon {
+  color: #ffd700;
+  font-size: 16px;
+}
+.crumb-sep {
+  color: #cccccc;
+  margin: 0 4px;
+}
+
+/* ترقيم الصفحات في التعليقات بنمط حديث */
+.comments-pager {
+  margin-top: 10px;
+  display: flex;
+  gap: 6px;
+}
+.comments-pager a {
+  display: inline-block;
+  padding: 6px 12px;
+  background-image: var(--primary-gradient);
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.comments-pager a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* إشعارات المستخدم بنمط حديث وزجاجي */
+.notifications-list {
+  list-style: none;
+  padding: 0;
+}
+.notifications-list li {
+  backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  padding: 10px;
+  position: relative;
+  color: #fff;
+}
+.notifications-list li.unread {
+  border-right: 6px solid #ff9800;
+  background: rgba(255, 152, 0, 0.2);
+}
+.notifications-list li.read {
+  border-right: 6px solid #9e9e9e;
+  background: rgba(158, 158, 158, 0.2);
+}
+.timestamp {
+  font-size: 12px;
+  color: #cccccc;
+}
+
+/* أقسام الإدارة بنمط زجاجي */
+.admin-section {
+  backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  color: #fff;
+  margin-bottom: 30px;
+  padding: 20px;
+}
+/* جدول لوحة الإدارة */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #fff;
+}
+.admin-table th, .admin-table td {
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  word-break: break-word;
+}
+.admin-table th {
+  background: var(--primary-gradient);
+  color: #fff;
+}
+.admin-table td {
+  background: rgba(255, 255, 255, 0.05);
+}
+.admin-table a {
+  color: #ff6f61;
+  text-decoration: none;
+}
+.admin-table a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive admin layout helpers */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+.admin-grid-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+@media (max-width: 992px) {
+  .admin-grid-two { grid-template-columns: 1fr; }
+}
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+@media (max-width: 576px) {
+  .admin-table th, .admin-table td { padding: 6px 8px; font-size: 13px; }
+}
+
+/* Categories table: hide less critical columns on phones */
+@media (max-width: 576px) {
+  .categories-table th:nth-child(3),
+  .categories-table td:nth-child(3), /* الأب */
+  .categories-table th:nth-child(4),
+  .categories-table td:nth-child(4), /* عدد الإعلانات */
+  .categories-table th:nth-child(5),
+  .categories-table td:nth-child(5)  /* عدد الفروع */ {
+    display: none;
+  }
+}
+
+/* Inline edit form grid inside admin categories table */
+.form-inline-grid {
+  margin-top: 6px;
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 6px;
+  align-items: center;
+}
+@media (max-width: 640px) {
+  .form-inline-grid {
+    grid-template-columns: 1fr;
+  }
+  .form-inline-grid .btn,
+  .form-inline-grid button {
+    width: 100%;
+  }
+}
+
+/* بطاقات الإحصائيات في لوحة الإدارة */
+.dash-card {
+  backdrop-filter: blur(var(--blur-amount)) saturate(180%);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 15px;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+.dash-card h4 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  color: #ffd700;
+}
+.dash-card p {
+  margin: 0;
+  font-size: 22px;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* تخصيص لون الأيقونات في البطاقات */
+.category-icon {
+  color: #ffd700;
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+/* تلوين عنوان الموقع بما يتوافق مع النمط الجديد */
+.site-title a {
+  color: #ffffff;
+  text-decoration: none;
+}
+.site-title a:hover {
+  color: #ffd700;
+}
+
+/* -----------------------------------------------------------------
+ * Custom dark‑theme refinements inspired by the provided mock‑ups.
+ * These overrides tone down the bright gradients and introduce
+ * midnight blues and soft greys for better contrast. They are
+ * intentionally scoped to specific components so the rest of the
+ * application retains its existing look. Feel free to adjust the
+ * hex values if you find different shades closer to the mock‑ups.
+ */
+
+/* Conversation bubbles: user messages use a saturated blue,
+   others use a soft translucent panel. The timestamp is muted. */
+.conversation-thread .message-row.mine .message-bubble {
+  background: linear-gradient(135deg, #0a3e80 0%, #06234e 100%);
+  color: #ffffff;
+}
+.conversation-thread .message-row.theirs .message-bubble {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+.conversation-thread .message-bubble .timestamp {
+  color: #a0a0a0;
+}
+
+/* Conversation list: dark panels with gentle hover effect. */
+.conversations-list .conversation-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+.conversations-list .conversation-item:hover {
+  background: rgba(255, 255, 255, 0.09);
+}
+
+/* Notifications: each entry is a flex container so the timestamp can
+   live on the far right. Read notifications are slightly faded. */
+.notifications-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+.notifications-list li.read {
+  opacity: 0.6;
+}
+.notifications-list li .timestamp {
+  margin-left: auto;
+  font-size: 14px;
+  color: #aaaaaa;
+}
+
+/* Ad details page improvements: images and actions are neatly spaced. */
+.ad-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+.ad-images .ad-detail-image {
+  flex: 1 1 100%;
+  border-radius: 16px;
+  object-fit: cover;
+  max-height: 300px;
+}
+@media (min-width: 600px) {
+  .ad-images .ad-detail-image {
+    flex: 1 1 calc(50% - 6px);
+  }
+}
+.ad-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+.comments-list .comment-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.comments-list .comment-item .comment-time {
+  font-size: 12px;
+  color: #999999;
+}
+
+/* Profile page tweaks: larger avatar and centred info. */
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.profile-header .avatar {
+  flex-shrink: 0;
+}
+.profile-info.card-modern .avatar-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Profile: meta layout and badges */
+.profile-info .profile-meta p { margin: 4px 0; }
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0a193d;
+  background: #e0e0e0;
+}
+.badge-success { background: #a5d6a7; color: #0a193d; }
+.badge-warning { background: #ffd54f; color: #0a193d; }
+.btn-compact { padding: 8px 12px; font-size: 14px; }
+
+/* Mobile-only compact button (doesn't affect desktop) */
+.btn-compact-sm { padding: 10px 16px; font-size: 15px; }
+@media (max-width: 576px) {
+  .btn-compact-sm { padding: 6px 10px; font-size: 12px; border-radius: 10px; }
+}
+
+/* Ensure compact button doesn't become full-width on small/medium screens */
+@media (max-width: 768px) {
+  .btn-compact-sm { width: auto !important; display: inline-block; min-width: 0; }
+}
+
+/* Profile edit form groups */
+.form-modern .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-modern .form-group { display: flex; flex-direction: column; }
+.form-modern .form-hint { color: #d6e4ff; font-size: 12px; margin-top: 6px; }
+@media (max-width: 640px) {
+  .form-modern .form-row { grid-template-columns: 1fr; }
+}
+
+/* Profile header responsive alignment */
+@media (min-width: 640px) {
+  .profile-header { flex-direction: row; align-items: center; }
+  .profile-header .avatar { margin-inline-end: 16px; }
+}
+
+/* Add listing form: full‑width inputs and consistent spacing. */
+.add-ad-form label {
+  color: #ffffff;
+  font-weight: 600;
+  margin-top: 12px;
+}
+.add-ad-form .input-modern {
+  margin-bottom: 12px;
+}
+.add-ad-form button.btn-modern {
+  margin-top: 10px;
+  width: 100%;
+}

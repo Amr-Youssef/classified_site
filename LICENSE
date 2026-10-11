@@ -1,0 +1,31 @@
+Proprietary License — رخصة ملكية خاصة
+Copyright (c) 2026 حراج نجد الجزيرة. All Rights Reserved. جميع الحقوق محفوظة.
+
+This repository and all its contents (source code, design, texts, images,
+database structure, and documentation) are the exclusive intellectual
+property of the owner.
+
+جميع محتويات هذا المستودع (الكود المصدري، التصميم، النصوص، الصور،
+هيكل قاعدة البيانات، والتوثيق) هي ملكية فكرية خاصة وحصرية لمالك المشروع.
+
+PERMITTED — المسموح:
+- Viewing the code on GitHub for evaluation purposes only.
+- الاطلاع على الكود في GitHub لأغراض التقييم فقط.
+
+PROHIBITED WITHOUT PRIOR WRITTEN PERMISSION — ممنوع بدون إذن كتابي مسبق:
+1. Copying, reproducing, or redistributing the code in whole or in part.
+   نسخ الكود أو إعادة إنتاجه أو توزيعه كلياً أو جزئياً.
+2. Using the code in any commercial or non-commercial project.
+   استخدام الكود في أي مشروع تجاري أو غير تجاري.
+3. Modifying, adapting, or creating derivative works.
+   تعديل الكود أو تحويره أو إنشاء أعمال مشتقة منه.
+4. Removing or altering copyright notices.
+   إزالة أو تغيير إشعارات حقوق الملكية.
+
+Any violation exposes the violator to legal liability under Saudi and
+international intellectual property laws.
+أي انتهاك يعرّض المخالف للمساءلة القانونية بموجب أنظمة الملكية الفكرية
+السعودية والاتفاقيات الدولية.
+
+Contact for licensing: via GitHub Issues on this repository.
+للتواصل بشأن الترخيص: عبر GitHub Issues في هذا المستودع.
